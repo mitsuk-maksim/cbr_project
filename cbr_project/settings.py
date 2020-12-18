@@ -44,9 +44,13 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework',
     'rest_framework_simplejwt',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -145,3 +149,4 @@ SIMPLE_JWT = {
     'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
 }
 
+CORS_ORIGIN_ALLOW_ALL = True
