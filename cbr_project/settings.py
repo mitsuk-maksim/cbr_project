@@ -12,11 +12,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 from datetime import timedelta
+from distutils.command.config import config
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -29,27 +29,32 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
+AUTH_USER_MODEL = 'users.User'
+# AUTH_USER_MODEL = 'accounts.User'
+
 INSTALLED_APPS = [
+    # 'send_email.apps.SendEmailConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'accounts',
-    'djoser',
+    # 'accounts.apps.SendEmailConfig'
+    # 'accounts',
+    # 'djoser',
     'rest_framework',
-    'rest_framework_simplejwt',
-    'corsheaders',
+    # 'rest_framework_simplejwt',
+    # 'corsheaders',
+    'users'
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -81,7 +86,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cbr_project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -95,7 +99,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -115,7 +118,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -129,24 +131,35 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
 
-
 REST_FRAMEWORK = {
+    'NON_FIELD_ERRORS_KEY': 'error',
+
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
-SIMPLE_JWT = {
-    'JWT_ALLOW_REFRESH': True,
-    'JWT_EXPIRATION_DELTA': timedelta(hours=1),
-    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
-}
+# SIMPLE_JWT = {
+#     'JWT_ALLOW_REFRESH': True,
+#     'JWT_EXPIRATION_DELTA': timedelta(hours=1),
+#     'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
+# }
 
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
+
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# DEFAULT_FROM_EMAIL = 'Максим'
+# DEFAULT_TO_EMAIL = 'cbr.mpei@gmail.com'
