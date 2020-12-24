@@ -20,10 +20,11 @@
 `source yourenvname/bin/activate`
 5) Установить Django и Django rest framework
 `pip install django djangorestframework`
-6) Установить Djoser: REST-реализация системы аутентификации Django.
-`pip install djoser`
-7) Установить серверную часть аутентификации веб-токена JSON для REST Framework Django
+6) Установить серверную часть аутентификации веб-токена JSON для REST Framework Django
 `pip install djangorestframework_simplejwt`
-
+7) Прописать в переменной окружения email и пароль SMTP сервера (нужно создать gmail почту)
+email: `EMAIL_HOST_USER`
+пароль: `EMAIL_HOST_PASSWORD`
 8) Для запуска написать
 `python manage.py runserver`
+
