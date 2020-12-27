@@ -19,12 +19,13 @@ from .serializers import LoginSerializer
 
 
 class RegisterView(generics.GenericAPIView):
+    """Регистрация пользователя"""
     serializer_class = RegisterSerializer
 
     def post(self, request):
         user = request.data
         serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=True) # подтверждаем пользователя
         serializer.save()
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
@@ -34,6 +35,7 @@ class RegisterView(generics.GenericAPIView):
         current_site = get_current_site(request).domain
         relative_link = reverse('email-verify')
 
+        # отправка письма, надо будет переделать на ссылку с фронта
         absurl = 'http://' + current_site + relative_link + '?token=' + str(token)
         email_body = ('Hi ' + user.username + ', use link to bellow to verify your email \n' + absurl
                       )
@@ -48,6 +50,7 @@ class RegisterView(generics.GenericAPIView):
 
 
 class VerifyEmail(views.APIView):
+    """Подтверждение почты"""
     serializer_class = EmailVerificationSerializer
     token_param_config = openapi.Parameter('token', in_=openapi.IN_QUERY, description='Description',
                                            type=openapi.TYPE_STRING)
@@ -69,6 +72,7 @@ class VerifyEmail(views.APIView):
 
 
 class LoginApiView(generics.GenericAPIView):
+    """Авторизация пользователя"""
     serializer_class = LoginSerializer
 
     def post(self, request):
@@ -76,3 +80,7 @@ class LoginApiView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# class RequestPasswordResetEmaail
+
