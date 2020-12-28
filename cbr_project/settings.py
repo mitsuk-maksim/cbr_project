@@ -160,9 +160,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
-
 CORS_ORIGIN_ALLOW_ALL = True
-
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
