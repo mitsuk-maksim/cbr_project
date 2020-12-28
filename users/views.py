@@ -22,7 +22,7 @@ from django.conf import settings
 from .serializers import EmailVerificationSerializer
 from .serializers import LoginSerializer
 from .serializers import ResetPasswordRequestSerializer
-from .utils import Util
+from .serializers import SetNewPasswordSerializer
 
 
 class RegisterView(generics.GenericAPIView):
@@ -127,4 +127,32 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
     """Проверка токена"""
 
     def get(self, request, uidb64, token):
-        pass
+
+        try:
+            id = smart_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id=id)
+
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                return Response({'error': 'Token is not valid, please request a new one'},
+                                status=status.HTTP_401_UNAUTHORIZED)
+            return Response({
+                'success': True,
+                'message': 'Credentials Valid',
+                'uidb64': uidb64,
+                'tokne': token
+            }, status=status.HTTP_200_OK)
+
+
+        except DjangoUnicodeDecodeError:
+            return Response({'error': 'Token is not valid, please request a new one'},
+                            status=status.HTTP_401_UNAUTHORIZED)
+
+
+class SetNewPasswordAPIView(generics.GenericAPIView):
+    """Новый пароль"""
+    serializer_class = SetNewPasswordSerializer
+
+    def patch(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
